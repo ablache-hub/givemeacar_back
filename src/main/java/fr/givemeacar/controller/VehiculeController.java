@@ -2,6 +2,7 @@ package fr.givemeacar.controller;
 
 import fr.givemeacar.model.Vehicule;
 import fr.givemeacar.repository.VehiculeRepository;
+import fr.givemeacar.services.VehiculeServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ public class VehiculeController {
 
     private final VehiculeRepository vehiculeRepository;
     private final AgenceService agenceService;
+    private final VehiculeServiceImpl vehiculeService;
 
     // Renvoie tous nos produits
     @GetMapping(value="/Vehicule")
@@ -44,10 +46,10 @@ public class VehiculeController {
     }
 
     // Mettre à jour un item déjà existant
-    @PutMapping(value="/Vehicule")
-    public void updateVehicule(@RequestBody Vehicule vehicule ) {
-        vehiculeRepository.save(vehicule);
-    }
+//    @PutMapping(value="/Vehicule")
+//    public void updateVehicule(@RequestBody Vehicule vehicule ) {
+//        vehiculeRepository.save(vehicule);
+//    }
 
     // Supprimer un item via son Id
     @DeleteMapping(value="/Vehicule/{id}")
@@ -74,6 +76,23 @@ public class VehiculeController {
     /* POST VEHICULE */
 
     /* PUT VEHICULE */
+
+    @PutMapping(path = "/vehicule/{vehiculeId}")
+    public void updateVehicule(
+            @PathVariable("vehiculeId") int vehiculeId,
+            @RequestBody Vehicule vehicule)
+//            @RequestParam(required = false) String marque,
+//            @RequestParam(required = false) String modele,
+//            @RequestParam(required = false) int price,
+//            @RequestParam(required = false) boolean disponibilityLocation,
+//            @RequestParam(required = false) boolean inRevision,
+//            @RequestParam(required = false) int coordonneesGPS
+
+    {
+//        vehiculeService.updateVehiculesServ(vehiculeId, marque, modele, price,disponibilityLocation, inRevision,coordonneesGPS);
+        vehiculeService.updateVehiculesServ(vehiculeId, vehicule);
+    }
+
 
     /* DELETE VEHICULE */
 

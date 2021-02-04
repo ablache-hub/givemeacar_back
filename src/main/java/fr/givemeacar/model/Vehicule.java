@@ -22,7 +22,8 @@ public @Data class Vehicule {
     private boolean inRevision;
     private int coordonneesGPS;
 
-    @ManyToOne @JoinColumn // todo name
+    @ManyToOne
+    @JoinColumn // todo name
     @JsonBackReference
     private Agence agence;
 }
