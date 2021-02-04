@@ -2,25 +2,19 @@ package fr.givemeacar.controller;
 import fr.givemeacar.model.Utilisateur;
 import fr.givemeacar.repository.UtilisateurRepository;
 import fr.givemeacar.services.AgenceService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 
-
-import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
+@AllArgsConstructor
 @RestController
 public class UtilisateurController {
 
-
-    @Autowired // instancie automatiquement le JPA
     private UtilisateurRepository utilisateurRepository;
-
-    @Autowired
     AgenceService agenceService;
 
     // Renvoie tous nos produits
@@ -74,7 +68,7 @@ public class UtilisateurController {
 
         List<Utilisateur> listUtilisateur;
         try {
-            listUtilisateur = agenceService.getListClientele(id);
+            listUtilisateur = agenceService.getListClienteleServ(id);
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }

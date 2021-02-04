@@ -2,6 +2,7 @@ package fr.givemeacar.controller;
 
 import fr.givemeacar.model.Contrat;
 import fr.givemeacar.repository.ContratRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,12 +12,11 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
+@AllArgsConstructor
 @RestController
 public class ContratController {
 
-    @Autowired
     private ContratRepository contratRepository;
-
 
 
     // Renvoie tous nos produits
@@ -29,9 +29,7 @@ public class ContratController {
     @GetMapping(value="/Contrat/{id}")
     public Optional<Contrat> contratById(@PathVariable int id){
 
-
         return contratRepository.findById(id);
-
 
     }
 

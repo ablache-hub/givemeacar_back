@@ -1,13 +1,10 @@
 package fr.givemeacar.controller;
 
 import fr.givemeacar.model.Agence;
-import fr.givemeacar.model.Utilisateur;
-import fr.givemeacar.model.Vehicule;
 import fr.givemeacar.repository.AgenceRepository;
 import fr.givemeacar.repository.VehiculeRepository;
-import fr.givemeacar.services.AgenceService;
+import fr.givemeacar.services.AgenceServiceImpl;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +23,7 @@ public class AgenceController {
     
     private final AgenceRepository agenceRepository;
     private final VehiculeRepository vehiculeRepository;
+    private final AgenceServiceImpl agenceService;
 
     // Renvoie tous nos produits
     @CrossOrigin
@@ -72,22 +70,16 @@ public class AgenceController {
     //Ajouter vehicule à agence
     @CrossOrigin
     @PostMapping(value="{agenceId}/vehicule/{vehiculeId}")
-    public void addVehiculeToAgence(@PathVariable("agenceId") int agenceId,
+    public void addVehiculeToAgency(@PathVariable("agenceId") int agenceId,
                                     @PathVariable("vehiculeId") int vehiculeId) {
-
-        Agence currentAgence = agenceRepository.findById(agenceId)
-                .orElseThrow(()-> new IllegalStateException("L'agence avec l'id " + agenceId + " n'existe pas"));
-
-        Vehicule currentVehicule = vehiculeRepository.findById(vehiculeId)
-                .orElseThrow(()-> new IllegalStateException("Le vehicule avec l'id " + vehiculeId + " n'existe pas"));
-
-        List<Vehicule> vehicules = currentAgence.getStockVehicules();
-
-        vehicules.add(currentVehicule);
-        currentAgence.setStockVehicules(vehicules);
-        currentVehicule.setAgence(currentAgence);
-        agenceRepository.save(currentAgence);
-        vehiculeRepository.save(currentVehicule);
+            agenceService.addVehiculeToAgencyServ(agenceId, vehiculeId);
     }
-    
+
+    //Ajouter vehicule à agence
+    @CrossOrigin
+    @PostMapping(value="{agenceId}/client/{clientId}")
+    public void addClientToAgency(@PathVariable("agenceId") int agenceId,
+                                    @PathVariable("clientId") int clientId) {
+        agenceService.addClientToAgencyServ(agenceId, clientId);
+    }
 }

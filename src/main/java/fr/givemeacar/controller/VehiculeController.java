@@ -3,7 +3,6 @@ package fr.givemeacar.controller;
 import fr.givemeacar.model.Vehicule;
 import fr.givemeacar.repository.VehiculeRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +19,6 @@ import java.util.Optional;
 public class VehiculeController {
 
     private final VehiculeRepository vehiculeRepository;
-
     private final AgenceService agenceService;
 
     // Renvoie tous nos produits
@@ -66,7 +64,7 @@ public class VehiculeController {
 
         List<Vehicule> listVehicule;
         try {
-            listVehicule = agenceService.getStockVehicules(id);
+            listVehicule = agenceService.getStockVehiculesServ(id);
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
