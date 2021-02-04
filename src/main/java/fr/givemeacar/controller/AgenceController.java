@@ -75,11 +75,15 @@ public class AgenceController {
             agenceService.addVehiculeToAgencyServ(agenceId, vehiculeId);
     }
 
-    //Ajouter vehicule à agence
+    //Ajouter client à agence
     @CrossOrigin
     @PostMapping(value="{agenceId}/client/{clientId}")
     public void addClientToAgency(@PathVariable("agenceId") int agenceId,
                                     @PathVariable("clientId") int clientId) {
         agenceService.addClientToAgencyServ(agenceId, clientId);
     }
+
+
+
+
 }
