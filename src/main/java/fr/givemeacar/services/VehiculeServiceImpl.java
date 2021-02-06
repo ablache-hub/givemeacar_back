@@ -42,8 +42,8 @@ public class VehiculeServiceImpl implements VehiculeService{
 
     }
 
-    public void updateDispo(int vehiculeId,
-                            boolean isAvailable) {
+    public void updateDispoServ(int vehiculeId,
+                                boolean isAvailable) {
 
         Vehicule currentVehicule = getVehicule(vehiculeId);
         currentVehicule.setAvailable(isAvailable);
@@ -51,8 +51,8 @@ public class VehiculeServiceImpl implements VehiculeService{
 
     }
 
-    public void updateRevision(int vehiculeId,
-                            boolean inRevision) {
+    public void updateRevisionServ(int vehiculeId,
+                                   boolean inRevision) {
 
         Vehicule currentVehicule = getVehicule(vehiculeId);
         currentVehicule.setInRevision(inRevision);

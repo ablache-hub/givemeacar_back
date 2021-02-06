@@ -7,10 +7,13 @@ import fr.givemeacar.repository.AgenceRepository;
 import fr.givemeacar.repository.UtilisateurRepository;
 import fr.givemeacar.repository.VehiculeRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @AllArgsConstructor
 @Service
@@ -24,7 +27,10 @@ public class AgenceServiceImpl implements AgenceService {
     // GET stock vehicules d'une agence
     @Override
     public List<Vehicule> getStockVehiculesServ(int id) {
-        return vehiculeRepository.findByAgenceId(id);
+        return vehiculeRepository.findByAgenceId(id)
+                .orElseThrow(()-> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Agence inexistante")
+                );
     }
 
     // GET liste clients d'une agence
@@ -53,6 +59,7 @@ public class AgenceServiceImpl implements AgenceService {
                 break;
             }
         }
+
         if(!exist){
             stockVehicules.add(currentVehicule);
             currentAgence.setStockVehicules(stockVehicules);
@@ -60,74 +67,9 @@ public class AgenceServiceImpl implements AgenceService {
             agenceRepository.save(currentAgence);
             vehiculeRepository.save(currentVehicule);
             System.out.println("Vehicule ajouté");
-        }else{
-            throw new IllegalStateException("Vehicule déjà existant");
-        }
-    }
-
-    //PUT client dans agence
-    @Override
-    public void addClientToAgencyServ(int agenceId, int clientId){
-
-        Agence currentAgence = scanAgence(agenceId);
-
-        Utilisateur currentUtilisateur = scanClient(clientId);
-
-        List<Utilisateur> listClient = currentAgence.getClientele();
-
-        boolean exist = false;
-
-        for (Utilisateur item: listClient){
-            if(item == currentUtilisateur){
-                exist = true;
-                break;
-            }
-        }
-
-        if(!exist){
-            listClient.add(currentUtilisateur);
-            currentAgence.setClientele(listClient);
-            currentUtilisateur.setAgence(currentAgence);
-            agenceRepository.save(currentAgence);
-            utilisateurRepository.save(currentUtilisateur);
-            System.out.println("Client ajouté");
-        }
-
-        else {
-            throw new IllegalStateException("Client déjà existant");
-        }
-    }
-
-    //DELETE client d'agence
-    @Override
-    public void deleteClientToAgencyServ(int agenceId, int clientId) {
-
-        Agence currentAgence = scanAgence(agenceId);
-
-        Utilisateur currentUtilisateur = scanClient(clientId);
-
-        List<Utilisateur> listClient = currentAgence.getClientele();
-
-        boolean exist = false;
-
-        for (Utilisateur item: listClient){
-            if(item == currentUtilisateur){
-                exist = true;
-                break;
-            }
-        }
-
-        if(exist){
-            listClient.remove(currentUtilisateur);
-            currentAgence.setClientele(listClient);
-            currentUtilisateur.setAgence(null);
-            agenceRepository.save(currentAgence);
-            utilisateurRepository.save(currentUtilisateur);
-            System.out.println("Client supprimé");
-        }
-
-        else {
-            throw new IllegalStateException("Client déjà existant");
+        } else {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT, "Vehicule déjà present");
         }
     }
 
@@ -160,7 +102,73 @@ public class AgenceServiceImpl implements AgenceService {
         }
 
         else {
-            throw new IllegalStateException("Vehicule déjà existant");
+            throw new IllegalStateException("Vehicule " +vehiculeId+ " non trouvé");
+        }
+    }
+
+    //PUT client dans agence
+    @Override
+    public void addClientToAgencyServ(int agenceId, int clientId){
+
+        Agence currentAgence = scanAgence(agenceId);
+
+        Utilisateur currentUtilisateur = scanClient(clientId);
+
+        List<Utilisateur> listClient = currentAgence.getClientele();
+
+        boolean exist = false;
+
+        for (Utilisateur item: listClient){
+            if(item == currentUtilisateur){
+                exist = true;
+                break;
+            }
+        }
+
+        if(!exist){
+            listClient.add(currentUtilisateur);
+            currentAgence.setClientele(listClient);
+            currentUtilisateur.setAgence(currentAgence);
+            agenceRepository.save(currentAgence);
+            utilisateurRepository.save(currentUtilisateur);
+            System.out.println("Client ajouté");
+        }
+
+        else {
+            throw new IllegalStateException("Client " +clientId+ " déjà existant");
+        }
+    }
+
+    //DELETE client d'agence
+    @Override
+    public void deleteClientToAgencyServ(int agenceId, int clientId) {
+
+        Agence currentAgence = scanAgence(agenceId);
+
+        Utilisateur currentUtilisateur = scanClient(clientId);
+
+        List<Utilisateur> listClient = currentAgence.getClientele();
+
+        boolean exist = false;
+
+        for (Utilisateur item: listClient){
+            if(item == currentUtilisateur){
+                exist = true;
+                break;
+            }
+        }
+
+        if(exist){
+            listClient.remove(currentUtilisateur);
+            currentAgence.setClientele(listClient);
+            currentUtilisateur.setAgence(null);
+            agenceRepository.save(currentAgence);
+            utilisateurRepository.save(currentUtilisateur);
+            System.out.println("Client supprimé");
+        }
+
+        else {
+            throw new IllegalStateException("Client " +clientId+ " non trouvé");
         }
     }
 

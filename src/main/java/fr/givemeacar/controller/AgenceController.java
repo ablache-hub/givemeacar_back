@@ -1,10 +1,11 @@
 package fr.givemeacar.controller;
 
 import fr.givemeacar.model.Agence;
+import fr.givemeacar.model.Vehicule;
 import fr.givemeacar.repository.AgenceRepository;
-import fr.givemeacar.repository.VehiculeRepository;
 import fr.givemeacar.services.AgenceServiceImpl;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +13,6 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.bind.annotation.GetMapping;
 
 
@@ -20,82 +20,127 @@ import org.springframework.web.bind.annotation.GetMapping;
 @AllArgsConstructor
 @RequestMapping(path = "/agence")
 public class AgenceController {
-    
+
     private final AgenceRepository agenceRepository;
-    private final VehiculeRepository vehiculeRepository;
     private final AgenceServiceImpl agenceService;
 
-    // Renvoie tous nos produits
+    /*
+        GET all agences
+    */
     @CrossOrigin
     @GetMapping
-     List<Agence> allAgency() {
-        return agenceRepository.findAll();
+    ResponseEntity<List<Agence>> allAgency() {
+        return ResponseEntity.ok().body(
+                agenceRepository.findAll()
+        );
     }
-    
-    // Renvoie un item via son id
+
+    /*
+        GET une agence par son Id
+    */
     @CrossOrigin
     @GetMapping(value="{id}")
-    public Optional<Agence> agencyById(@PathVariable int id){
-        return agenceRepository.findById(id);
+    public ResponseEntity<Optional<Agence>> agencyById(@PathVariable int id){
+        return ResponseEntity.ok().body(
+                agenceRepository.findById(id)
+        );
     }
-    
-    // Créer un item
+
+    /*
+      GET liste vehicules d'une agence
+    */
+    @CrossOrigin
+    @GetMapping(value = "{id}/vehicules/")
+    public ResponseEntity<List<Vehicule>> getAllVehicule(
+            @PathVariable(value="id") int id) {
+
+        return ResponseEntity.ok().body(
+                agenceService.getStockVehiculesServ(id)
+        );
+    }
+
+    /*
+        POST une agence
+    */
     @CrossOrigin
     @PostMapping
-    public ResponseEntity<Void> createAgency(@RequestBody Agence agence ) {
-        Agence savedAgence = agenceRepository.save(agence); // on stock dans la var 'savedAgence' l'agence créée, de type Agence
+    public ResponseEntity<Void> createAgency(
+            @RequestBody Agence agence) {
 
-        // On appelle la fonction getId de notre var savedAgence (qui fonctionne vu que c'est de type Agence donc elle a getId())
-        // On injecte ensuite cette agence et son id dans notre URI (suite de l'URL)
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedAgence.getId()).toUri();
+        agenceRepository.save(agence);
 
-        // On return la création/build de notre URI
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(
+                URI.create("/agence/" + agence.getId())).build();
     }
 
-    // Mettre à jour un item déjà existant
+    /*
+        PUT - Mettre à jour un item déjà existant
+    */
     @CrossOrigin
     @PutMapping
-    public void updateAgency(@RequestBody Agence agence ) {
-         agenceRepository.save(agence);
+    public ResponseEntity<Void> updateAgency(
+            @RequestBody Agence agence) {
+
+        agenceRepository.save(agence);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
-    // Supprimer un item via son Id
+    /*
+        Supprimer un item via son Id
+    */
     @CrossOrigin
     @DeleteMapping(value="{id}")
-    public void deleteAgency(@PathVariable int id){
+    public ResponseEntity<Void> deleteAgency(@PathVariable int id){
+
         agenceRepository.deleteById(id);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
-    //Ajouter vehicule à agence
+    /*
+        POST - Ajouter vehicule à agence
+    */
     @CrossOrigin
     @PostMapping(value="{agenceId}/vehicule/{vehiculeId}")
-    public void addVehiculeToAgency(@PathVariable("agenceId") int agenceId,
+    public ResponseEntity<Void> addVehiculeToAgency(@PathVariable("agenceId") int agenceId,
                                     @PathVariable("vehiculeId") int vehiculeId) {
-            agenceService.addVehiculeToAgencyServ(agenceId, vehiculeId);
+
+        agenceService.addVehiculeToAgencyServ(agenceId, vehiculeId);
+        return new ResponseEntity(HttpStatus.CREATED);
     }
 
-    //Ajouter client à agence
+    /*
+        POST - Ajouter client à agence
+    */
     @CrossOrigin
     @PostMapping(value="{agenceId}/client/{clientId}")
-    public void addClientToAgency(@PathVariable("agenceId") int agenceId,
-                                    @PathVariable("clientId") int clientId) {
+    public ResponseEntity<Void> addClientToAgency(@PathVariable("agenceId") int agenceId,
+                                  @PathVariable("clientId") int clientId) {
+
         agenceService.addClientToAgencyServ(agenceId, clientId);
+        return new ResponseEntity(HttpStatus.CREATED);
     }
 
+    /*
+        DELETE client du stock d'une agence
+    */
     @CrossOrigin
     @DeleteMapping(value="{agenceId}/client/{clientId}")
-    public void deleteClientToAgency(@PathVariable("agenceId") int agenceId,
-                                  @PathVariable("clientId") int clientId) {
+    public ResponseEntity<Void> deleteClientToAgency(@PathVariable("agenceId") int agenceId,
+                                     @PathVariable("clientId") int clientId) {
+
         agenceService.deleteClientToAgencyServ(agenceId, clientId);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
+    /*
+        DELETE vehicule du stock d'une agence
+    */
     @CrossOrigin
     @DeleteMapping(value="{agenceId}/vehicule/{vehiculeId}")
-    public void deleteVehiculeToAgency(@PathVariable("agenceId") int agenceId,
+    public ResponseEntity<Void> deleteVehiculeToAgency(@PathVariable("agenceId") int agenceId,
                                        @PathVariable("vehiculeId") int vehiculeId) {
         agenceService.deleteVehiculeToAgencyServ(agenceId, vehiculeId);
+        return new ResponseEntity(HttpStatus.OK);
     }
-
 
 }

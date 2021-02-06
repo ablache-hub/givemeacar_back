@@ -2,12 +2,12 @@ package fr.givemeacar.controller;
 
 import fr.givemeacar.model.Vehicule;
 import fr.givemeacar.repository.VehiculeRepository;
+import fr.givemeacar.services.AgenceServiceImpl;
 import fr.givemeacar.services.VehiculeServiceImpl;
 import lombok.AllArgsConstructor;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import fr.givemeacar.services.AgenceService;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -21,7 +21,7 @@ import java.util.Optional;
 public class VehiculeController {
 
     private final VehiculeRepository vehiculeRepository;
-    private final AgenceService agenceService;
+    private final AgenceServiceImpl agenceService;
     private final VehiculeServiceImpl vehiculeService;
 
     /*
@@ -32,29 +32,13 @@ public class VehiculeController {
         return vehiculeRepository.findAll();
     }
 
-    // Renvoie un item via son id
+     /*
+        GET un vehicule
+     */
     @GetMapping(value="{id}")
     public ResponseEntity<Optional<Vehicule>> vehiculeById(@PathVariable int id) {
         return ResponseEntity.ok()
                 .body(vehiculeRepository.findById(id));
-    }
-
-
-    /*
-        GET list vehicules par agence
-    */
-    @CrossOrigin
-    @GetMapping(value = "/agences/{id}/vehicules/")
-
-    public ResponseEntity<List<Vehicule>> getAllVehicule(@PathVariable(value="id") int id) {
-
-        List<Vehicule> listVehicule;
-        try {
-            listVehicule = agenceService.getStockVehiculesServ(id);
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok().body(listVehicule);
     }
 
     /*
@@ -86,7 +70,7 @@ public class VehiculeController {
             @PathVariable("vehiculeId") int vehiculeId,
             @RequestParam boolean dispoCheck
     ) {
-        vehiculeService.updateDispo(vehiculeId, dispoCheck);
+        vehiculeService.updateDispoServ(vehiculeId, dispoCheck);
     }
 
     @PutMapping(path = "{vehiculeId}/revision")
@@ -94,13 +78,12 @@ public class VehiculeController {
             @PathVariable("vehiculeId") int vehiculeId,
             @RequestParam boolean revisionCheck
     ) {
-        vehiculeService.updateRevision(vehiculeId, revisionCheck);
+        vehiculeService.updateRevisionServ(vehiculeId, revisionCheck);
     }
 
     /*
         DELETE VEHICULE
     */
-
     @DeleteMapping(value="{id}")
     public void deleteVehicule(@PathVariable int id){
         vehiculeRepository.deleteById(id);
