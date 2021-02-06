@@ -1,15 +1,15 @@
 package fr.givemeacar.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import javax.persistence.*;
 
 @Entity
-
+@Getter @Setter
+@NoArgsConstructor
 //@Table(name="vehicule")
-public @Data class Vehicule {
+public class Vehicule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,7 +18,7 @@ public @Data class Vehicule {
     private String marque;
     private String modele;
     private int price;
-    private boolean disponibilityLocation;
+    private boolean isAvailable;
     private boolean inRevision;
     private int coordonneesGPS;
 
@@ -26,4 +26,5 @@ public @Data class Vehicule {
     @JoinColumn // todo name
     @JsonBackReference
     private Agence agence;
+
 }

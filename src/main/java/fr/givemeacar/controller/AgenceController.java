@@ -83,7 +83,19 @@ public class AgenceController {
         agenceService.addClientToAgencyServ(agenceId, clientId);
     }
 
+    @CrossOrigin
+    @DeleteMapping(value="{agenceId}/client/{clientId}")
+    public void deleteClientToAgency(@PathVariable("agenceId") int agenceId,
+                                  @PathVariable("clientId") int clientId) {
+        agenceService.deleteClientToAgencyServ(agenceId, clientId);
+    }
 
+    @CrossOrigin
+    @DeleteMapping(value="{agenceId}/vehicule/{vehiculeId}")
+    public void deleteVehiculeToAgency(@PathVariable("agenceId") int agenceId,
+                                       @PathVariable("vehiculeId") int vehiculeId) {
+        agenceService.deleteVehiculeToAgencyServ(agenceId, vehiculeId);
+    }
 
 
 }
