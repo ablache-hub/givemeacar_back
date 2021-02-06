@@ -17,48 +17,32 @@ import java.util.Optional;
 @AllArgsConstructor
 @RestController // Controller qui permet de réaliser des requêtes Http CRUD -> Api Rest
 
+@RequestMapping(path = "vehicule")
 public class VehiculeController {
 
     private final VehiculeRepository vehiculeRepository;
     private final AgenceService agenceService;
     private final VehiculeServiceImpl vehiculeService;
 
-    // Renvoie tous nos produits
-    @GetMapping(value="/Vehicule")
-    List<Vehicule> allVehicule() {
+    /*
+        GET all vehicules
+    */
+    @GetMapping
+    public List<Vehicule> allVehicule() {
         return vehiculeRepository.findAll();
     }
 
     // Renvoie un item via son id
-    @GetMapping(value="/Vehicule/{id}")
-    public Optional<Vehicule> vehiculeById(@PathVariable int id){
-        return vehiculeRepository.findById(id);
-    }
-
-    // Créer un item
-    @PostMapping(value="/Vehicule")
-    public ResponseEntity<Void> createVehicule(@RequestBody Vehicule vehicule ) {
-        Vehicule savedVehicule = vehiculeRepository.save(vehicule);
-
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedVehicule.getId()).toUri();
-
-        return ResponseEntity.created(location).build();
-    }
-
-    // Mettre à jour un item déjà existant
-//    @PutMapping(value="/Vehicule")
-//    public void updateVehicule(@RequestBody Vehicule vehicule ) {
-//        vehiculeRepository.save(vehicule);
-//    }
-
-    // Supprimer un item via son Id
-    @DeleteMapping(value="/Vehicule/{id}")
-    public void deleteVehicule(@PathVariable int id){
-        vehiculeRepository.deleteById(id);
+    @GetMapping(value="{id}")
+    public ResponseEntity<Optional<Vehicule>> vehiculeById(@PathVariable int id) {
+        return ResponseEntity.ok()
+                .body(vehiculeRepository.findById(id));
     }
 
 
-    /* GET ALL VEHICULES */
+    /*
+        GET list vehicules par agence
+    */
     @CrossOrigin
     @GetMapping(value = "/agences/{id}/vehicules/")
 
@@ -73,29 +57,53 @@ public class VehiculeController {
         return ResponseEntity.ok().body(listVehicule);
     }
 
-    /* POST VEHICULE */
+    /*
+        POST VEHICULE
+    */
+    @PostMapping
+    public ResponseEntity<Void> createVehicule(@RequestBody Vehicule vehicule ) {
+        Vehicule savedVehicule = vehiculeRepository.save(vehicule);
 
-    /* PUT VEHICULE */
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedVehicule.getId()).toUri();
 
-    @PutMapping(path = "/vehicule/{vehiculeId}")
+        return ResponseEntity.created(location).build();
+    }
+
+    /* PUT VEHICULE
+        J'ai crée deux fonctions séparées pour gérer les booléens, si on les traite dans "updateVehicule"
+        ils seront set sur false par défaut ce qu'on ne veut pas
+    */
+    @PutMapping(path = "{vehiculeId}")
     public void updateVehicule(
             @PathVariable("vehiculeId") int vehiculeId,
-            @RequestBody Vehicule vehicule)
-//            @RequestParam(required = false) String marque,
-//            @RequestParam(required = false) String modele,
-//            @RequestParam(required = false) int price,
-//            @RequestParam(required = false) boolean disponibilityLocation,
-//            @RequestParam(required = false) boolean inRevision,
-//            @RequestParam(required = false) int coordonneesGPS
-
-    {
-//        vehiculeService.updateVehiculesServ(vehiculeId, marque, modele, price,disponibilityLocation, inRevision,coordonneesGPS);
+            @RequestBody Vehicule vehicule
+    ) {
         vehiculeService.updateVehiculesServ(vehiculeId, vehicule);
     }
 
+    @PutMapping(path = "{vehiculeId}/dispo")
+    public void setDisponibility(
+            @PathVariable("vehiculeId") int vehiculeId,
+            @RequestParam boolean dispoCheck
+    ) {
+        vehiculeService.updateDispo(vehiculeId, dispoCheck);
+    }
 
-    /* DELETE VEHICULE */
+    @PutMapping(path = "{vehiculeId}/revision")
+    public void setRevision(
+            @PathVariable("vehiculeId") int vehiculeId,
+            @RequestParam boolean revisionCheck
+    ) {
+        vehiculeService.updateRevision(vehiculeId, revisionCheck);
+    }
 
+    /*
+        DELETE VEHICULE
+    */
 
+    @DeleteMapping(value="{id}")
+    public void deleteVehicule(@PathVariable int id){
+        vehiculeRepository.deleteById(id);
+    }
 
 }

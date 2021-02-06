@@ -9,13 +9,15 @@ public interface AgenceService {
 
 
     // On créer une fonction qui va permettre de donner le stock par agence
-    public List<Vehicule> getStockVehiculesServ(int id);
+    List<Vehicule> getStockVehiculesServ(int id);
 
-    public List<Utilisateur> getListClienteleServ(int id);
+    List<Utilisateur> getListClienteleServ(int id);
 
-    public void addVehiculeToAgencyServ(int agenceId, int vehiculeId);
+    void addVehiculeToAgencyServ(int agenceId, int vehiculeId);
 
-    public void addClientToAgencyServ(int agenceId, int clientele);
+    void addClientToAgencyServ(int agenceId, int clientele);
 
+    void deleteClientToAgencyServ(int agenceId, int clientId);
 
+    void deleteVehiculeToAgencyServ(int agenceId, int vehiculeId);
 }

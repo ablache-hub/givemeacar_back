@@ -4,9 +4,7 @@ import fr.givemeacar.model.Vehicule;
 import fr.givemeacar.repository.VehiculeRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -17,39 +15,54 @@ public class VehiculeServiceImpl implements VehiculeService{
     @Override
 //    @Transactional
     public void updateVehiculesServ(int vehiculeId,
-                                    Vehicule vehicule
-//                                    String marque,
-//                                    String modele,
-//                                    int price,
-//                                    boolean disponibilityLocation,
-//                                    boolean inRevision,
-//                                    int coordonneesGPS
-    ) {
+                                    Vehicule vehicule) {
+
+        Vehicule currentVehicule = getVehicule(vehiculeId);
 
 
-        Vehicule currentVehicule = vehiculeRepository.findById(vehiculeId)
-                .orElseThrow(() -> new IllegalStateException("Le vehicule " + vehiculeId + " n'existe pas"));
+        if (vehicule.getMarque() != null
+                && vehicule.getMarque().length() > 0) {
+            currentVehicule.setMarque(vehicule.getMarque());
+        }
 
-        String modele = vehicule.getModele();
+        if (vehicule.getModele() != null
+                && vehicule.getModele().length() > 0) {
+            currentVehicule.setModele(vehicule.getModele());
+        }
 
-//        if(vehicule.getModele() != null &&
-//                name.length()>0 &&
-//                !student.getName().equals(name)) {
-//            student.setName(name);
-//        }
-//
-//        if(email != null &&
-//                email.length()>0 &&
-//                !student.getEmail().equals(email)) {
-//            Optional<Student> studentEmail = studentRepository.findStudentByEmail(email);
-//            if(studentEmail.isPresent() ) {
-//                throw new IllegalStateException("Cet email est déjà utilisé");
-//            } else {
-//                student.setEmail(email);
-//            }
-//
-//        }
-//    }
+        if (vehicule.getPrice() > 0) {
+            currentVehicule.setPrice(vehicule.getPrice());
+        }
+
+        if (vehicule.getCoordonneesGPS() != 0) {
+            currentVehicule.setCoordonneesGPS(vehicule.getCoordonneesGPS());
+        }
+
+        vehiculeRepository.save(currentVehicule);
 
     }
+
+    public void updateDispo(int vehiculeId,
+                            boolean isAvailable) {
+
+        Vehicule currentVehicule = getVehicule(vehiculeId);
+        currentVehicule.setAvailable(isAvailable);
+        vehiculeRepository.save(currentVehicule);
+
+    }
+
+    public void updateRevision(int vehiculeId,
+                            boolean inRevision) {
+
+        Vehicule currentVehicule = getVehicule(vehiculeId);
+        currentVehicule.setInRevision(inRevision);
+        vehiculeRepository.save(currentVehicule);
+
+    }
+
+    public Vehicule getVehicule(int vehiculeId) {
+        return vehiculeRepository.findById(vehiculeId)
+                .orElseThrow(() -> new IllegalStateException("Le vehicule " + vehiculeId + " n'existe pas"));
+    }
+
 }
