@@ -1,9 +1,7 @@
 package fr.givemeacar.controller;
 import fr.givemeacar.model.Utilisateur;
 import fr.givemeacar.repository.UtilisateurRepository;
-import fr.givemeacar.services.AgenceService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -15,14 +13,12 @@ import java.util.Optional;
 @RequestMapping(path = "utilisateur")
 public class UtilisateurController {
 
-    private UtilisateurRepository utilisateurRepository;
-    AgenceService agenceService;
+    private final UtilisateurRepository utilisateurRepository;
 
     // Renvoie tous nos produits
     @CrossOrigin
     @GetMapping
-    List<Utilisateur> allUtilisateurs() {
-
+    List<Utilisateur> getUtilisateurs() {
         return utilisateurRepository.findAll();
     }
 
@@ -31,15 +27,12 @@ public class UtilisateurController {
     @GetMapping(value = "{id}")
     public Optional<Utilisateur> utilisateurById(@PathVariable int id) {
         return utilisateurRepository.findById(id);
-
     }
 
     // Mettre à jour un item déjà existant
     @CrossOrigin
     @PutMapping
     public void updateUtilisateur(@RequestBody Utilisateur utilisateur) {
-
-
         utilisateurRepository.save(utilisateur);
     }
 
@@ -47,8 +40,6 @@ public class UtilisateurController {
     @CrossOrigin
     @DeleteMapping(value = "{id}")
     public void deleteUtilisateur(@PathVariable int id) {
-
-
         utilisateurRepository.deleteById(id);
     }
 
@@ -56,12 +47,7 @@ public class UtilisateurController {
     @PostMapping
     @CrossOrigin
     public void postUtilisateur(@RequestBody Utilisateur utilisateur) {
-
-
         utilisateurRepository.save(utilisateur);
 
     }
-
-
-
 }

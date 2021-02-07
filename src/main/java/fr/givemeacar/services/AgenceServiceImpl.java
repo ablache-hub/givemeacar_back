@@ -35,7 +35,7 @@ public class AgenceServiceImpl implements AgenceService {
 
     // GET liste clients d'une agence
     @Override
-    public List<Utilisateur> getListClienteleServ(int id) {
+    public List<Utilisateur> getListClientsServ(int id) {
         checkAgence(id);
         return utilisateurRepository.findByAgenceId(id)
                 .orElseThrow(() -> new ResponseStatusException(
