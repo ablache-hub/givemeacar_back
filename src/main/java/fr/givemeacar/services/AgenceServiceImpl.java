@@ -13,7 +13,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @AllArgsConstructor
 @Service
@@ -27,27 +26,30 @@ public class AgenceServiceImpl implements AgenceService {
     // GET stock vehicules d'une agence
     @Override
     public List<Vehicule> getStockVehiculesServ(int id) {
+        checkAgence(id);
         return vehiculeRepository.findByAgenceId(id)
                 .orElseThrow(()-> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Agence inexistante")
+                        HttpStatus.NO_CONTENT)
                 );
     }
 
     // GET liste clients d'une agence
     @Override
     public List<Utilisateur> getListClienteleServ(int id) {
-
-        return utilisateurRepository.findByAgenceId(id);
-
+        checkAgence(id);
+        return utilisateurRepository.findByAgenceId(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NO_CONTENT)
+                );
     }
 
     //PUT vehicule dans agence
     @Override
     public void addVehiculeToAgencyServ(int agenceId, int vehiculeId){
 
-        Agence currentAgence = scanAgence(agenceId);
+        Agence currentAgence = checkAgence(agenceId);
 
-        Vehicule currentVehicule = scanVehicule(vehiculeId);
+        Vehicule currentVehicule = checkVehicule(vehiculeId);
 
         List<Vehicule> stockVehicules = currentAgence.getStockVehicules();
 
@@ -66,7 +68,6 @@ public class AgenceServiceImpl implements AgenceService {
             currentVehicule.setAgence(currentAgence);
             agenceRepository.save(currentAgence);
             vehiculeRepository.save(currentVehicule);
-            System.out.println("Vehicule ajouté");
         } else {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT, "Vehicule déjà present");
@@ -75,11 +76,11 @@ public class AgenceServiceImpl implements AgenceService {
 
     //DELETE vehicule d'agence
     @Override
-    public void deleteVehiculeToAgencyServ(int agenceId, int vehiculeId) {
+    public void deleteVehiculeFromAgencyServ(int agenceId, int vehiculeId) {
 
-        Agence currentAgence = scanAgence(agenceId);
+        Agence currentAgence = checkAgence(agenceId);
 
-        Vehicule currentVehicule = scanVehicule(vehiculeId);
+        Vehicule currentVehicule = checkVehicule(vehiculeId);
 
         List<Vehicule> stockVehicules = currentAgence.getStockVehicules();
 
@@ -98,11 +99,11 @@ public class AgenceServiceImpl implements AgenceService {
             currentVehicule.setAgence(null);
             agenceRepository.save(currentAgence);
             vehiculeRepository.save(currentVehicule);
-            System.out.println("Vehicule supprimé");
         }
 
         else {
-            throw new IllegalStateException("Vehicule " +vehiculeId+ " non trouvé");
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Vehicule " +vehiculeId+ " absent du stock de l'agence de " +currentAgence.getLocalisation());
         }
     }
 
@@ -110,9 +111,9 @@ public class AgenceServiceImpl implements AgenceService {
     @Override
     public void addClientToAgencyServ(int agenceId, int clientId){
 
-        Agence currentAgence = scanAgence(agenceId);
+        Agence currentAgence = checkAgence(agenceId);
 
-        Utilisateur currentUtilisateur = scanClient(clientId);
+        Utilisateur currentUtilisateur = checkClient(clientId);
 
         List<Utilisateur> listClient = currentAgence.getClientele();
 
@@ -141,11 +142,11 @@ public class AgenceServiceImpl implements AgenceService {
 
     //DELETE client d'agence
     @Override
-    public void deleteClientToAgencyServ(int agenceId, int clientId) {
+    public void deleteClientFromAgencyServ(int agenceId, int clientId) {
 
-        Agence currentAgence = scanAgence(agenceId);
+        Agence currentAgence = checkAgence(agenceId);
 
-        Utilisateur currentUtilisateur = scanClient(clientId);
+        Utilisateur currentUtilisateur = checkClient(clientId);
 
         List<Utilisateur> listClient = currentAgence.getClientele();
 
@@ -172,22 +173,22 @@ public class AgenceServiceImpl implements AgenceService {
         }
     }
 
-    Agence scanAgence(int agenceId) {
-        Agence agence = agenceRepository.findById(agenceId)
-                .orElseThrow(()-> new IllegalStateException("L'agence d'id " + agenceId + " n'existe pas"));
-        return agence;
+    Agence checkAgence(int agenceId) {
+        return agenceRepository.findById(agenceId)
+                .orElseThrow(()-> new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "L'agence numéro " + agenceId + " n'existe pas"));
     }
 
-    Vehicule scanVehicule(int vehiculeId) {
-        Vehicule vehicule = vehiculeRepository.findById(vehiculeId)
-                .orElseThrow(()-> new IllegalStateException("L'agence d'id " + vehiculeId + " n'existe pas"));
-        return vehicule;
+    Vehicule checkVehicule(int vehiculeId) {
+        return vehiculeRepository.findById(vehiculeId)
+                .orElseThrow(()-> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Le véhicule numéro " + vehiculeId + " n'existe pas"));
     }
 
-    Utilisateur scanClient(int clientId) {
-        Utilisateur currentUtilisateur = utilisateurRepository.findById(clientId)
-                .orElseThrow(()-> new IllegalStateException("L'agence d'id " + clientId + " n'existe pas"));
-        return currentUtilisateur;
+    Utilisateur checkClient(int clientId) {
+        return utilisateurRepository.findById(clientId)
+                .orElseThrow(()-> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Le client numéro " + clientId + " n'existe pas"));
     }
 
 }

@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @RestController
+@RequestMapping(path = "utilisateur")
 public class UtilisateurController {
 
     private UtilisateurRepository utilisateurRepository;
@@ -19,7 +20,7 @@ public class UtilisateurController {
 
     // Renvoie tous nos produits
     @CrossOrigin
-    @GetMapping(value = "/Utilisateur")
+    @GetMapping
     List<Utilisateur> allUtilisateurs() {
 
         return utilisateurRepository.findAll();
@@ -27,7 +28,7 @@ public class UtilisateurController {
 
     // Renvoie un item via son id
     @CrossOrigin
-    @GetMapping(value = "/Utilisateur/{id}")
+    @GetMapping(value = "{id}")
     public Optional<Utilisateur> utilisateurById(@PathVariable int id) {
         return utilisateurRepository.findById(id);
 
@@ -35,7 +36,7 @@ public class UtilisateurController {
 
     // Mettre à jour un item déjà existant
     @CrossOrigin
-    @PutMapping(value = "/Utilisateur")
+    @PutMapping
     public void updateUtilisateur(@RequestBody Utilisateur utilisateur) {
 
 
@@ -44,14 +45,15 @@ public class UtilisateurController {
 
     // Supprimer un item via son Id
     @CrossOrigin
-    @DeleteMapping(value = "/Utilisateur/{id}")
+    @DeleteMapping(value = "{id}")
     public void deleteUtilisateur(@PathVariable int id) {
 
 
         utilisateurRepository.deleteById(id);
     }
 
-    @PostMapping(value = "/Utilisateur")
+    /*POST Utilisateur*/
+    @PostMapping
     @CrossOrigin
     public void postUtilisateur(@RequestBody Utilisateur utilisateur) {
 
@@ -60,21 +62,6 @@ public class UtilisateurController {
 
     }
 
-    /* GET all Utilisateurs */
-    @CrossOrigin
-    @GetMapping(value = "/Agence/{id}/Utilisateur")
 
-    public ResponseEntity<List<Utilisateur>> getAllUtilisateurs(@PathVariable(value="id") int id) {
-
-        List<Utilisateur> listUtilisateur;
-        try {
-            listUtilisateur = agenceService.getListClienteleServ(id);
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok().body(listUtilisateur);
-    }
-
-    /*POST Utilisateur*/
 
 }
