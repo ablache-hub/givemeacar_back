@@ -1,7 +1,11 @@
 package fr.givemeacar.controller;
 import fr.givemeacar.model.Utilisateur;
 import fr.givemeacar.repository.UtilisateurRepository;
+import fr.givemeacar.services.UtilisateurService;
+import fr.givemeacar.services.UtilisateurServiceImpl;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -14,6 +18,7 @@ import java.util.Optional;
 public class UtilisateurController {
 
     private final UtilisateurRepository utilisateurRepository;
+    private final UtilisateurServiceImpl utilisateurService;
 
     // Renvoie tous nos produits
     @CrossOrigin
@@ -36,6 +41,15 @@ public class UtilisateurController {
         utilisateurRepository.save(utilisateur);
     }
 
+    // Changer l'Utilisateur d'Agence
+    @CrossOrigin
+    @PutMapping(path = "/{utilisateurId}/agence/{newAgenceId}")
+    public ResponseEntity<Void> moveUtilisateur(@PathVariable("utilisateurId") int utilisateurId, @PathVariable("newAgenceId") int newAgenceId){
+        utilisateurService.moveClientServ(utilisateurId, newAgenceId);
+        // on return rien vu que c'est <Void> donc on met null
+        return new ResponseEntity<>(null, HttpStatus.OK);
+    }
+
     // Supprimer un item via son Id
     @CrossOrigin
     @DeleteMapping(value = "{id}")
@@ -48,6 +62,5 @@ public class UtilisateurController {
     @CrossOrigin
     public void postUtilisateur(@RequestBody Utilisateur utilisateur) {
         utilisateurRepository.save(utilisateur);
-
     }
 }
