@@ -6,6 +6,7 @@ import fr.givemeacar.services.AgenceServiceImpl;
 import fr.givemeacar.services.VehiculeServiceImpl;
 import lombok.AllArgsConstructor;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -21,21 +22,20 @@ import java.util.Optional;
 public class VehiculeController {
 
     private final VehiculeRepository vehiculeRepository;
-    private final AgenceServiceImpl agenceService;
     private final VehiculeServiceImpl vehiculeService;
 
     /*
         GET all vehicules
     */
     @GetMapping
-    public List<Vehicule> allVehicule() {
-        return vehiculeRepository.findAll();
+    public ResponseEntity<List<Vehicule>> allVehicule() {
+        return ResponseEntity.ok(vehiculeRepository.findAll());
     }
 
-     /*
-        GET un vehicule
-     */
-    @GetMapping(value="{id}")
+    /*
+       GET un vehicule
+    */
+    @GetMapping(value = "{id}")
     public ResponseEntity<Optional<Vehicule>> vehiculeById(@PathVariable int id) {
         return ResponseEntity.ok()
                 .body(vehiculeRepository.findById(id));
@@ -45,12 +45,12 @@ public class VehiculeController {
         POST VEHICULE
     */
     @PostMapping
-    public ResponseEntity<Void> createVehicule(@RequestBody Vehicule vehicule ) {
+    public ResponseEntity<Void> createVehicule(@RequestBody Vehicule vehicule) {
         Vehicule savedVehicule = vehiculeRepository.save(vehicule);
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedVehicule.getId()).toUri();
-
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(
+                URI.create("/vehicule/" + vehicule.getId()))
+                .build();
     }
 
     /* PUT VEHICULE
@@ -58,35 +58,54 @@ public class VehiculeController {
         ils seront set sur false par défaut ce qu'on ne veut pas
     */
     @PutMapping(path = "{vehiculeId}")
-    public void updateVehicule(
+    public ResponseEntity<Void> updateVehicule(
             @PathVariable("vehiculeId") int vehiculeId,
-            @RequestBody Vehicule vehicule
-    ) {
+            @RequestBody Vehicule vehicule)
+    {
+
         vehiculeService.updateVehiculesServ(vehiculeId, vehicule);
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     @PutMapping(path = "{vehiculeId}/dispo")
-    public void setDisponibility(
+    public ResponseEntity<Void> setDisponibility(
             @PathVariable("vehiculeId") int vehiculeId,
-            @RequestParam boolean dispoCheck
-    ) {
+            @RequestParam boolean dispoCheck)
+    {
+
         vehiculeService.updateDispoServ(vehiculeId, dispoCheck);
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     @PutMapping(path = "{vehiculeId}/revision")
-    public void setRevision(
+    public ResponseEntity<Void> setRevision(
             @PathVariable("vehiculeId") int vehiculeId,
-            @RequestParam boolean revisionCheck
-    ) {
+            @RequestParam boolean revisionCheck)
+    {
+
         vehiculeService.updateRevisionServ(vehiculeId, revisionCheck);
+        return new ResponseEntity<>(null, HttpStatus.OK);
+
+    }
+
+    @PutMapping(path = "{vehiculeId}/agence/{newAgenceId}")
+    public ResponseEntity<Void> moveVehicule(
+            @PathVariable("vehiculeId") int vehiculeId,
+            @PathVariable("newAgenceId") int newAgenceId)
+    {
+        vehiculeService.moveVehiculeServ(vehiculeId, newAgenceId);
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     /*
         DELETE VEHICULE
     */
     @DeleteMapping(value="{id}")
-    public void deleteVehicule(@PathVariable int id){
+    public ResponseEntity<Void> deleteVehicule(@PathVariable int id){
         vehiculeRepository.deleteById(id);
+
+        return new ResponseEntity<>(null, HttpStatus.OK);
+
     }
 
 }

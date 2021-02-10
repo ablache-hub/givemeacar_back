@@ -1,5 +1,6 @@
 package fr.givemeacar.services;
 
+import fr.givemeacar.model.Agence;
 import fr.givemeacar.model.Vehicule;
 import fr.givemeacar.repository.VehiculeRepository;
 import lombok.AllArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 public class VehiculeServiceImpl implements VehiculeService{
 
     private final VehiculeRepository vehiculeRepository;
+    private final AgenceServiceImpl agenceService;
 
     @Override
 //    @Transactional
@@ -63,6 +65,19 @@ public class VehiculeServiceImpl implements VehiculeService{
     public Vehicule getVehicule(int vehiculeId) {
         return vehiculeRepository.findById(vehiculeId)
                 .orElseThrow(() -> new IllegalStateException("Le vehicule " + vehiculeId + " n'existe pas"));
+    }
+
+    public void moveVehiculeServ(int vehiculeId , int newAgenceId){
+
+        Agence currentAgence = agenceService.checkAgence(newAgenceId);
+        Vehicule currentVehicule = agenceService.checkVehicule(vehiculeId);
+
+        // Verifier dans quelle agence est le vehicule: si son agence Id = 0 -> not_found
+       // Si il a une agence, on vire l'agence (agenceId dans sql) et on le remplace par newAgenceId , comme ça il a une nouvelle Agence
+
+            currentVehicule.setAgence(currentAgence);
+            vehiculeRepository.save(currentVehicule);
+
     }
 
 }

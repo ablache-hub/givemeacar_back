@@ -1,7 +1,6 @@
 package fr.givemeacar.model;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
@@ -24,7 +23,7 @@ public class Agence {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-
+    @Column(unique=true)
     private String name;
     private String localisation;
     private int nombreVehicules;

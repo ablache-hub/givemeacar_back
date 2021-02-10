@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.server.ResponseStatusException;
 
 
 @RestController // Controller qui permet de réaliser des requêtes Http CRUD -> Api Rest
@@ -30,7 +30,7 @@ public class AgenceController {
     */
     @CrossOrigin
     @GetMapping
-    ResponseEntity<List<Agence>> allAgency() {
+    ResponseEntity<List<Agence>> getAllAgencies() {
         return ResponseEntity.ok().body(
                 agenceRepository.findAll()
         );
@@ -41,9 +41,10 @@ public class AgenceController {
     */
     @CrossOrigin
     @GetMapping(value="{id}")
-    public ResponseEntity<Optional<Agence>> agencyById(@PathVariable int id){
+    public ResponseEntity<Agence> getAgencyById(@PathVariable int id){
         return ResponseEntity.ok().body(
                 agenceRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NO_CONTENT))
         );
     }
 
@@ -52,7 +53,7 @@ public class AgenceController {
     */
     @CrossOrigin
     @GetMapping(value = "{agenceId}/vehicules/")
-    public ResponseEntity<List<Vehicule>> getAllVehicule(
+    public ResponseEntity<List<Vehicule>> getAllVehiculeByAgency(
             @PathVariable(value="agenceId") int agenceId) {
 
         return ResponseEntity.ok().body(
@@ -65,16 +66,16 @@ public class AgenceController {
     */
     @CrossOrigin
     @GetMapping(value = "{agenceId}/utilisateurs/")
-    public ResponseEntity<List<Utilisateur>> getAllUtilisateurs(
+    public ResponseEntity<List<Utilisateur>> getAllClientsByAgency(
             @PathVariable(value="agenceId") int agenceId) {
 
         return ResponseEntity.ok().body(
-                agenceService.getListClienteleServ(agenceId)
+                agenceService.getListClientsServ(agenceId)
         );
     }
 
     /*
-        POST une agence
+        POST agence
     */
     @CrossOrigin
     @PostMapping
@@ -89,29 +90,6 @@ public class AgenceController {
     }
 
     /*
-        PUT - Mettre à jour un item déjà existant
-    */
-    @CrossOrigin
-    @PutMapping
-    public ResponseEntity<Void> updateAgency(
-            @RequestBody Agence agence) {
-
-        agenceRepository.save(agence);
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
-    /*
-        Supprimer un item via son Id
-    */
-    @CrossOrigin
-    @DeleteMapping(value="{id}")
-    public ResponseEntity<Void> deleteAgency(@PathVariable int id){
-
-        agenceRepository.deleteById(id);
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
-    /*
         POST - Ajouter vehicule à agence
     */
     @CrossOrigin
@@ -120,7 +98,7 @@ public class AgenceController {
                                                     @PathVariable("vehiculeId") int vehiculeId) {
 
         agenceService.addVehiculeToAgencyServ(agenceId, vehiculeId);
-        return new ResponseEntity(HttpStatus.CREATED);
+        return new ResponseEntity<>(null, HttpStatus.CREATED);
     }
 
     /*
@@ -132,7 +110,30 @@ public class AgenceController {
                                                   @PathVariable("clientId") int clientId) {
 
         agenceService.addClientToAgencyServ(agenceId, clientId);
-        return new ResponseEntity(HttpStatus.CREATED);
+        return new ResponseEntity<>(null, HttpStatus.CREATED);
+    }
+
+    /*
+        PUT - Mettre à jour agence
+    */
+    @CrossOrigin
+    @PutMapping
+    public ResponseEntity<Void> updateAgency(
+            @RequestBody Agence agence) {
+
+        agenceRepository.save(agence);
+        return new ResponseEntity<>(null, HttpStatus.OK);
+    }
+
+    /*
+        Supprimer agence
+    */
+    @CrossOrigin
+    @DeleteMapping(value="{id}")
+    public ResponseEntity<Void> deleteAgency(@PathVariable int id){
+
+        agenceRepository.deleteById(id);
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     /*
@@ -144,7 +145,7 @@ public class AgenceController {
                                                        @PathVariable("clientId") int clientId) {
 
         agenceService.deleteClientFromAgencyServ(agenceId, clientId);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     /*
@@ -155,7 +156,7 @@ public class AgenceController {
     public ResponseEntity<Void> deleteVehiculeFromAgency(@PathVariable("agenceId") int agenceId,
                                                          @PathVariable("vehiculeId") int vehiculeId) {
         agenceService.deleteVehiculeFromAgencyServ(agenceId, vehiculeId);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
 }

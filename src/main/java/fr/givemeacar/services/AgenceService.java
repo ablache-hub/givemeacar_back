@@ -11,7 +11,7 @@ public interface AgenceService {
     // On créer une fonction qui va permettre de donner le stock par agence
     List<Vehicule> getStockVehiculesServ(int id);
 
-    List<Utilisateur> getListClienteleServ(int id);
+    List<Utilisateur> getListClientsServ(int id);
 
     void addVehiculeToAgencyServ(int agenceId, int vehiculeId);
 
