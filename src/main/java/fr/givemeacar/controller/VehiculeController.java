@@ -62,6 +62,7 @@ public class VehiculeController {
             @PathVariable("vehiculeId") int vehiculeId,
             @RequestBody Vehicule vehicule)
     {
+
         vehiculeService.updateVehiculesServ(vehiculeId, vehicule);
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
@@ -71,6 +72,7 @@ public class VehiculeController {
             @PathVariable("vehiculeId") int vehiculeId,
             @RequestParam boolean dispoCheck)
     {
+
         vehiculeService.updateDispoServ(vehiculeId, dispoCheck);
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
@@ -80,6 +82,7 @@ public class VehiculeController {
             @PathVariable("vehiculeId") int vehiculeId,
             @RequestParam boolean revisionCheck)
     {
+
         vehiculeService.updateRevisionServ(vehiculeId, revisionCheck);
         return new ResponseEntity<>(null, HttpStatus.OK);
 
@@ -92,7 +95,6 @@ public class VehiculeController {
     {
         vehiculeService.moveVehiculeServ(vehiculeId, newAgenceId);
         return new ResponseEntity<>(null, HttpStatus.OK);
-
     }
 
     /*
