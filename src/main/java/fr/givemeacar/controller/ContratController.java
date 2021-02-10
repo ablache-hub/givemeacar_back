@@ -3,7 +3,6 @@ package fr.givemeacar.controller;
 import fr.givemeacar.model.Contrat;
 import fr.givemeacar.repository.ContratRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -16,7 +15,7 @@ import java.util.Optional;
 @RestController
 public class ContratController {
 
-    private ContratRepository contratRepository;
+    private final ContratRepository contratRepository;
 
 
     // Renvoie tous nos produits
