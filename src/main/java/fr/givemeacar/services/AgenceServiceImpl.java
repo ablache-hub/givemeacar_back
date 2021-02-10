@@ -34,6 +34,8 @@ public class AgenceServiceImpl implements AgenceService {
     }
 
     // GET liste clients d'une agence
+    // orElseThrow est utilisable quand c'est <Optionnal> , c'est l'équivalent un if/else pour gérer l'error
+    // Si y'a pas <Optionnal>, on est obligé de faire un throw new avec if/else ou try/catch, c'est plus long
     @Override
     public List<Utilisateur> getListClientsServ(int id) {
         checkAgence(id);
@@ -96,6 +98,7 @@ public class AgenceServiceImpl implements AgenceService {
         if(exist){
             stockVehicules.remove(currentVehicule);
             currentAgence.setStockVehicules(stockVehicules);
+            // strike de la clef étrangère dans vehicule pour qu'il n'ai plus d'agence
             currentVehicule.setAgence(null);
             agenceRepository.save(currentAgence);
             vehiculeRepository.save(currentVehicule);
@@ -103,7 +106,7 @@ public class AgenceServiceImpl implements AgenceService {
 
         else {
             throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Vehicule " +vehiculeId+ " absent du stock de l'agence de " +currentAgence.getLocalisation());
+                    HttpStatus.NOT_FOUND, "Vehicule " + vehiculeId + " absent du stock de l'agence de " + currentAgence.getLocalisation());
         }
     }
 
@@ -142,7 +145,7 @@ public class AgenceServiceImpl implements AgenceService {
 
     //DELETE client d'agence
     @Override
-    public void deleteClientFromAgencyServ(int agenceId, int clientId) {
+    public void deleteClientFromAgencyServ(int agenceId, int clientId){
 
         Agence currentAgence = checkAgence(agenceId);
 

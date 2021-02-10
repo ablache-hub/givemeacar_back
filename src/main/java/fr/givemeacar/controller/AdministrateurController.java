@@ -1,4 +1,6 @@
-package fr.givemeacar.controller;public class AdministrateurController {
+package fr.givemeacar.controller;
+
+public class AdministrateurController {
 
 }
 
