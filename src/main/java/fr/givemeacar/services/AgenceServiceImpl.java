@@ -63,10 +63,10 @@ public class AgenceServiceImpl implements AgenceService {
         }
 
         if(!exist){
-            stockVehicules.add(currentVehicule);
-            currentAgence.setStockVehicules(stockVehicules);
+//            stockVehicules.add(currentVehicule);
+//            currentAgence.setStockVehicules(stockVehicules);
             currentVehicule.setAgence(currentAgence);
-            agenceRepository.save(currentAgence);
+//            agenceRepository.save(currentAgence);
             vehiculeRepository.save(currentVehicule);
         } else {
             throw new ResponseStatusException(
@@ -87,7 +87,7 @@ public class AgenceServiceImpl implements AgenceService {
         boolean exist = false;
 
         for (Vehicule item: stockVehicules){
-            if(item .equals(currentVehicule)){
+            if(item == (currentVehicule)){
                 exist = true;
                 break;
             }

@@ -22,7 +22,7 @@ public class Vehicule {
     private boolean inRevision;
     private int coordonneesGPS;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn // todo name
     @JsonBackReference
     private Agence agence;
