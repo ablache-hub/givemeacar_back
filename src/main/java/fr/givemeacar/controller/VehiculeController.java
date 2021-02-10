@@ -2,14 +2,12 @@ package fr.givemeacar.controller;
 
 import fr.givemeacar.model.Vehicule;
 import fr.givemeacar.repository.VehiculeRepository;
-import fr.givemeacar.services.AgenceServiceImpl;
 import fr.givemeacar.services.VehiculeServiceImpl;
 import lombok.AllArgsConstructor;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
@@ -46,7 +44,7 @@ public class VehiculeController {
     */
     @PostMapping
     public ResponseEntity<Void> createVehicule(@RequestBody Vehicule vehicule) {
-        Vehicule savedVehicule = vehiculeRepository.save(vehicule);
+        vehiculeRepository.save(vehicule);
 
         return ResponseEntity.created(
                 URI.create("/vehicule/" + vehicule.getId()))

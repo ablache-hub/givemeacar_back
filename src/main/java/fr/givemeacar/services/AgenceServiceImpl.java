@@ -34,8 +34,8 @@ public class AgenceServiceImpl implements AgenceService {
     }
 
     // GET liste clients d'une agence
-    // orElseThrow est utilisable quand c'est <Optionnal> , c'est l'équivalent un if/else pour gérer l'error
-    // Si y'a pas <Optionnal>, on est obligé de faire un throw new avec if/else ou try/catch, c'est plus long
+    // orElseThrow est utilisable quand c'est <Optional> , c'est l'équivalent un if/else pour gérer l'erreur
+    // Si y'a pas <Optional>, on est obligé de faire un throw new avec if/else ou try/catch, c'est plus long
     @Override
     public List<Utilisateur> getListClientsServ(int id) {
         checkAgence(id);

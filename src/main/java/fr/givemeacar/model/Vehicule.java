@@ -1,7 +1,6 @@
 package fr.givemeacar.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import javax.persistence.*;
 

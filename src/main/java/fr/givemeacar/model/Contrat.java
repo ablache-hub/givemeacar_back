@@ -14,8 +14,8 @@ public @Data class Contrat {
     private int endLocation;
     private int price;
 
-    //private Vehicule vehicule;
-    //private Utilisateur client;
+   /* private Vehicule vehicule;
+    private Utilisateur client;*/
 
 
 }
