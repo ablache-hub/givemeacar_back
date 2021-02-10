@@ -1,7 +1,6 @@
 package fr.givemeacar.controller;
 import fr.givemeacar.model.Utilisateur;
 import fr.givemeacar.repository.UtilisateurRepository;
-import fr.givemeacar.services.UtilisateurService;
 import fr.givemeacar.services.UtilisateurServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,22 +22,26 @@ public class UtilisateurController {
     // Renvoie tous nos produits
     @CrossOrigin
     @GetMapping
-    List<Utilisateur> getUtilisateurs() {
-        return utilisateurRepository.findAll();
+    ResponseEntity<List<Utilisateur>> getUtilisateurs() {
+        return ResponseEntity.ok(
+                utilisateurRepository.findAll());
     }
 
     // Renvoie un item via son id
     @CrossOrigin
     @GetMapping(value = "{id}")
-    public Optional<Utilisateur> utilisateurById(@PathVariable int id) {
-        return utilisateurRepository.findById(id);
+    public ResponseEntity<Optional<Utilisateur>> utilisateurById(@PathVariable int id) {
+        return ResponseEntity.ok(
+                utilisateurRepository.findById(id));
     }
 
     // Mettre à jour un item déjà existant
     @CrossOrigin
     @PutMapping
-    public void updateUtilisateur(@RequestBody Utilisateur utilisateur) {
+    public ResponseEntity<Void> updateUtilisateur(@RequestBody Utilisateur utilisateur) {
+
         utilisateurRepository.save(utilisateur);
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     // Changer l'Utilisateur d'Agence
@@ -53,14 +56,16 @@ public class UtilisateurController {
     // Supprimer un item via son Id
     @CrossOrigin
     @DeleteMapping(value = "{id}")
-    public void deleteUtilisateur(@PathVariable int id) {
+    public ResponseEntity<Void> deleteUtilisateur(@PathVariable int id) {
         utilisateurRepository.deleteById(id);
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     /*POST Utilisateur*/
     @PostMapping
     @CrossOrigin
-    public void postUtilisateur(@RequestBody Utilisateur utilisateur) {
+    public ResponseEntity<Void> postUtilisateur(@RequestBody Utilisateur utilisateur) {
         utilisateurRepository.save(utilisateur);
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 }
