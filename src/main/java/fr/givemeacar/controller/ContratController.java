@@ -13,19 +13,21 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @RestController
+@RequestMapping(value ="contrat")
+@CrossOrigin
 public class ContratController {
 
     private final ContratRepository contratRepository;
 
 
     // Renvoie tous nos produits
-    @GetMapping(value="/Contrat")
+    @GetMapping
     List<Contrat> allContrat() {
         return contratRepository.findAll();
     }
 
     // Renvoie un item via son id
-    @GetMapping(value="/Contrat/{id}")
+    @GetMapping(value="{id}")
     public Optional<Contrat> contratById(@PathVariable int id){
 
         return contratRepository.findById(id);
@@ -33,7 +35,7 @@ public class ContratController {
     }
 
     // Créer un item
-    @PostMapping(value="/Contrat")
+    @PostMapping
     public ResponseEntity<Void> createContrat(@RequestBody Contrat contrat) {
 
         Contrat savedContrat = contratRepository.save(contrat);
@@ -44,13 +46,13 @@ public class ContratController {
     }
 
     // Mettre à jour un item déjà existant
-    @PutMapping(value="/Contrat")
+    @PutMapping
     public void updateContrat(@RequestBody Contrat contrat) {
         contratRepository.save(contrat);
     }
 
     // Supprimer un item via son Id
-    @DeleteMapping(value="/Contrat/{id}")
+    @DeleteMapping(value="{id}")
     public void deleteContrat(@PathVariable int id){
 
         contratRepository.deleteById(id);
