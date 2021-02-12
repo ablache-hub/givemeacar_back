@@ -23,6 +23,12 @@ public class AgenceServiceImpl implements AgenceService {
     UtilisateurRepository utilisateurRepository;
     AgenceRepository agenceRepository;
 
+    public void createAgency(Agence agence) {
+        agence.setName("Agence de " + agence.getLocalisation());
+        agenceRepository.save(agence);
+
+    }
+
     // GET stock vehicules d'une agence
     @Override
     public List<Vehicule> getStockVehiculesServ(int id) {
@@ -65,10 +71,8 @@ public class AgenceServiceImpl implements AgenceService {
         }
 
         if(!exist){
-//            stockVehicules.add(currentVehicule);
-//            currentAgence.setStockVehicules(stockVehicules);
             currentVehicule.setAgence(currentAgence);
-//            agenceRepository.save(currentAgence);
+            currentAgence.setNombreVehicules(currentAgence.getNombreVehicules()+1);
             vehiculeRepository.save(currentVehicule);
         } else {
             throw new ResponseStatusException(
@@ -96,11 +100,9 @@ public class AgenceServiceImpl implements AgenceService {
         }
 
         if(exist){
-            stockVehicules.remove(currentVehicule);
-            currentAgence.setStockVehicules(stockVehicules);
             // strike de la clef étrangère dans vehicule pour qu'il n'ai plus d'agence
             currentVehicule.setAgence(null);
-            agenceRepository.save(currentAgence);
+            currentAgence.setNombreVehicules(currentAgence.getNombreVehicules()-1);
             vehiculeRepository.save(currentVehicule);
         }
 
@@ -130,14 +132,9 @@ public class AgenceServiceImpl implements AgenceService {
         }
 
         if(!exist){
-            listClient.add(currentUtilisateur);
-            currentAgence.setClientele(listClient);
             currentUtilisateur.setAgence(currentAgence);
-            agenceRepository.save(currentAgence);
             utilisateurRepository.save(currentUtilisateur);
-            System.out.println("Client ajouté");
         }
-
         else {
             throw new IllegalStateException("Client " +clientId+ " déjà existant");
         }
@@ -163,12 +160,8 @@ public class AgenceServiceImpl implements AgenceService {
         }
 
         if(exist){
-            listClient.remove(currentUtilisateur);
-            currentAgence.setClientele(listClient);
             currentUtilisateur.setAgence(null);
-            agenceRepository.save(currentAgence);
             utilisateurRepository.save(currentUtilisateur);
-            System.out.println("Client supprimé");
         }
 
         else {

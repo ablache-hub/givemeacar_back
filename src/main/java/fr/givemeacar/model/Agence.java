@@ -26,6 +26,7 @@ public class Agence {
     @Column(unique=true)
     private String name;
     private String localisation;
+
     private int nombreVehicules;
     private int vehiculeDispo;
     private int vehiculeRevision;
@@ -42,10 +43,7 @@ public class Agence {
 
 
 
-
-
-
-    /* METHODS
+ /* METHODS
     public void ajouterVehicule(){
 
     }
