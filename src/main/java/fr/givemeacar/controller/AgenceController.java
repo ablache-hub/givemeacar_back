@@ -20,6 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController // Controller qui permet de réaliser des requêtes Http CRUD -> Api Rest
 @AllArgsConstructor
 @RequestMapping(path = "agence")
+@CrossOrigin
 public class AgenceController {
 
     private final AgenceRepository agenceRepository;
@@ -28,7 +29,6 @@ public class AgenceController {
     /*
         GET all agences
     */
-    @CrossOrigin
     @GetMapping
     ResponseEntity<List<Agence>> getAllAgencies() {
         return ResponseEntity.ok().body(
@@ -39,7 +39,6 @@ public class AgenceController {
     /*
         GET une agence par son Id
     */
-    @CrossOrigin
     @GetMapping(value="{id}")
     public ResponseEntity<Agence> getAgencyById(@PathVariable int id){
         return ResponseEntity.ok().body(
@@ -51,7 +50,6 @@ public class AgenceController {
     /*
       GET liste vehicules d'une agence
     */
-    @CrossOrigin
     @GetMapping(value = "{agenceId}/vehicules/")
     public ResponseEntity<List<Vehicule>> getAllVehiculeByAgency(
             @PathVariable(value="agenceId") int agenceId) {
@@ -64,7 +62,6 @@ public class AgenceController {
     /*
         GET liste clients/utilisateurs d'une agence
     */
-    @CrossOrigin
     @GetMapping(value = "{agenceId}/utilisateurs/")
     public ResponseEntity<List<Utilisateur>> getAllClientsByAgency(
             @PathVariable(value="agenceId") int agenceId) {
@@ -77,7 +74,6 @@ public class AgenceController {
     /*
         POST agence
     */
-    @CrossOrigin
     @PostMapping
     public ResponseEntity<Void> createAgency(
             @RequestBody Agence agence) {
@@ -92,7 +88,6 @@ public class AgenceController {
     /*
         POST - Ajouter vehicule à agence
     */
-    @CrossOrigin
     @PostMapping(value="{agenceId}/vehicule/{vehiculeId}")
     public ResponseEntity<Void> addVehiculeToAgency(@PathVariable("agenceId") int agenceId,
                                                     @PathVariable("vehiculeId") int vehiculeId) {
@@ -104,7 +99,6 @@ public class AgenceController {
     /*
         POST - Ajouter client à agence
     */
-    @CrossOrigin
     @PostMapping(value="{agenceId}/client/{clientId}")
     public ResponseEntity<Void> addClientToAgency(@PathVariable("agenceId") int agenceId,
                                                   @PathVariable("clientId") int clientId) {
@@ -116,7 +110,6 @@ public class AgenceController {
     /*
         PUT - Mettre à jour agence
     */
-    @CrossOrigin
     @PutMapping
     public ResponseEntity<Void> updateAgency(
             @RequestBody Agence agence) {
@@ -128,7 +121,6 @@ public class AgenceController {
     /*
         Supprimer agence
     */
-    @CrossOrigin
     @DeleteMapping(value="{id}")
     public ResponseEntity<Void> deleteAgency(@PathVariable int id){
 
@@ -139,7 +131,6 @@ public class AgenceController {
     /*
         DELETE client d'une agence
     */
-    @CrossOrigin
     @DeleteMapping(value="{agenceId}/client/{clientId}")
     public ResponseEntity<Void> deleteClientFromAgency(@PathVariable("agenceId") int agenceId,
                                                        @PathVariable("clientId") int clientId) {
@@ -151,7 +142,6 @@ public class AgenceController {
     /*
         DELETE vehicule du stock d'une agence
     */
-    @CrossOrigin
     @DeleteMapping(value="{agenceId}/vehicule/{vehiculeId}")
     public ResponseEntity<Void> deleteVehiculeFromAgency(@PathVariable("agenceId") int agenceId,
                                                          @PathVariable("vehiculeId") int vehiculeId) {

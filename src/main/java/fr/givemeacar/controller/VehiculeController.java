@@ -15,8 +15,8 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @RestController // Controller qui permet de réaliser des requêtes Http CRUD -> Api Rest
-
 @RequestMapping(path = "vehicule")
+@CrossOrigin
 public class VehiculeController {
 
     private final VehiculeRepository vehiculeRepository;

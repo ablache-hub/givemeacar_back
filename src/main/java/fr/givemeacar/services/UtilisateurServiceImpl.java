@@ -7,6 +7,8 @@ import fr.givemeacar.repository.UtilisateurRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @AllArgsConstructor
 public class UtilisateurServiceImpl implements UtilisateurService {
@@ -27,5 +29,12 @@ public class UtilisateurServiceImpl implements UtilisateurService {
         currentUtilisateur.setAgence(currentAgence);
         //Vu qu'on travaille que sur une itération, il faut enregistrer dans la BDD cet utilisateur avec la nouvelle agence grâce à JPA qui connait la function .save()
         utilisateurRepository.save(currentUtilisateur);
+    }
+
+    public Agence getAgenceByUserServ(int userId) {
+        Utilisateur currentUtilisateur = agenceService.checkClient(userId);
+
+        return currentUtilisateur.getAgence();
+
     }
 }
