@@ -72,6 +72,6 @@ public class UtilisateurController {
     @PostMapping
     public ResponseEntity<Void> postUtilisateur(@RequestBody Utilisateur utilisateur) {
         utilisateurRepository.save(utilisateur);
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        return new ResponseEntity<>(null, HttpStatus.CREATED);
     }
 }

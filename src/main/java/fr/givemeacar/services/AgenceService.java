@@ -1,5 +1,6 @@
 package fr.givemeacar.services;
 
+import fr.givemeacar.model.Agence;
 import fr.givemeacar.model.Utilisateur;
 import fr.givemeacar.model.Vehicule;
 
@@ -20,4 +21,6 @@ public interface AgenceService {
     void deleteClientFromAgencyServ(int agenceId, int clientId);
 
     void deleteVehiculeFromAgencyServ(int agenceId, int vehiculeId);
+
+    void createAgency(Agence agence);
 }

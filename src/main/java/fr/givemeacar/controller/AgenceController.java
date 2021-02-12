@@ -78,7 +78,7 @@ public class AgenceController {
     public ResponseEntity<Void> createAgency(
             @RequestBody Agence agence) {
 
-        agenceRepository.save(agence);
+        agenceService.createAgency(agence);
 
         return ResponseEntity.created(
                 URI.create("/agence/" + agence.getId()))
