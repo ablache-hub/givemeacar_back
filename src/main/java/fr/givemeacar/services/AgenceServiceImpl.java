@@ -29,10 +29,6 @@ public class AgenceServiceImpl implements AgenceService {
 
     }
 
-    @Override
-    public void updateAgencyServ(int agenceId, Agence agence) {
-
-    }
 
     // GET stock vehicules d'une agence
     @Override
