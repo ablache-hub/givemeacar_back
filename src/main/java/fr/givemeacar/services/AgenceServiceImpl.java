@@ -29,6 +29,11 @@ public class AgenceServiceImpl implements AgenceService {
 
     }
 
+    @Override
+    public void updateAgencyServ(int agenceId, Agence agence) {
+
+    }
+
     // GET stock vehicules d'une agence
     @Override
     public List<Vehicule> getStockVehiculesServ(int id) {
@@ -73,6 +78,15 @@ public class AgenceServiceImpl implements AgenceService {
         if(!exist){
             currentVehicule.setAgence(currentAgence);
             currentAgence.setNombreVehicules(currentAgence.getNombreVehicules()+1);
+
+            if(currentVehicule.isAvailable()) {
+                currentAgence.setVehiculeDispo(currentAgence.getVehiculeDispo()+1);
+            }
+
+            if(currentVehicule.isInRevision()) {
+                currentAgence.setVehiculeRevision(currentAgence.getVehiculeRevision()+1);
+            }
+
             vehiculeRepository.save(currentVehicule);
         } else {
             throw new ResponseStatusException(
@@ -103,6 +117,14 @@ public class AgenceServiceImpl implements AgenceService {
             // strike de la clef étrangère dans vehicule pour qu'il n'ai plus d'agence
             currentVehicule.setAgence(null);
             currentAgence.setNombreVehicules(currentAgence.getNombreVehicules()-1);
+
+            if(currentVehicule.isAvailable()) {
+                currentAgence.setVehiculeDispo(currentAgence.getVehiculeDispo()-1);
+            }
+
+            if(currentVehicule.isInRevision()) {
+                currentAgence.setVehiculeRevision(currentAgence.getVehiculeRevision()-1);
+            }
             vehiculeRepository.save(currentVehicule);
         }
 
@@ -136,7 +158,7 @@ public class AgenceServiceImpl implements AgenceService {
             utilisateurRepository.save(currentUtilisateur);
         }
         else {
-            throw new IllegalStateException("Client " +clientId+ " déjà existant");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Client " +clientId+ " déjà existant");
         }
     }
 
