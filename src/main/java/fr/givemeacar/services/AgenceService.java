@@ -23,4 +23,6 @@ public interface AgenceService {
     void deleteVehiculeFromAgencyServ(int agenceId, int vehiculeId);
 
     void createAgency(Agence agence);
+
+    void updateAgencyServ(int agenceId, Agence agence);
 }
