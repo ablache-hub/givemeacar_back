@@ -24,5 +24,4 @@ public interface AgenceService {
 
     void createAgency(Agence agence);
 
-    void updateAgencyServ(int agenceId, Agence agence);
 }
